@@ -20,6 +20,7 @@ A Go wrapper library and CLI for the **Confluence Data Center / Server REST API*
 git clone https://github.com/darthkoax/confluencecli.git
 cd confluencecli
 go build -o confluencecli ./cmd/confluencecli
+mv ./confluencecli /usr/local/bin/
 ```
 
 ### Install to GOPATH
