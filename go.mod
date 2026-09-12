@@ -1,4 +1,4 @@
-module github.com/darkkoax/confluencecli
+module github.com/darthkoax/confluencecli
 
 go 1.26.3
 

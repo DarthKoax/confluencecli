@@ -7,7 +7,7 @@ confluencecli init [--dir <path>]
 ```
 
 **Flags:**
-- `--dir <path>`: Directory to create config in (default: ~/.config/darthkoax/confluencecli)
+- `--dir <path>`: Directory to create config in (default: ~/.config/confluencecli)
 
 **Description:**
 Creates a default configuration file at the specified location. The config file contains placeholders for your Confluence instance URL and API token.
@@ -20,7 +20,7 @@ confluencecli init --dir /custom/path
 
 **Output:**
 ```
-Configuration file created at: ~/.config/darthkoax/confluencecli/config.toml
+Configuration file created at: ~/.config/confluencecli/config.toml
 Edit the file to set your Confluence base_url and api_token.
 ```
 
@@ -31,7 +31,7 @@ confluencecli connect [--config <path>]
 ```
 
 **Flags:**
-- `--config <path>`: Path to config file (default: ~/.config/darthkoax/confluencecli/config.toml)
+- `--config <path>`: Path to config file (default: ~/.config/confluencecli/config.toml)
 
 **Description:**
 Connects to the Confluence Data Center instance using the configuration file and verifies authentication by fetching the current user's information.
@@ -99,7 +99,7 @@ Prints the CLI version and GitHub repository information.
 **Output:**
 ```
 confluencecli version 0.1.0
-GitHub: https://github.com/darkkoax/confluencecli
+GitHub: https://github.com/darthkoax/confluencecli
 ```
 
 ## Health Check

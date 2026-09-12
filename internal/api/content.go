@@ -5,7 +5,7 @@ import (
 	"fmt"
 	"net/url"
 
-	"github.com/darkkoax/confluencecli/internal/client"
+	"github.com/darthkoax/confluencecli/internal/client"
 )
 
 type ContentService struct {
@@ -155,22 +155,22 @@ func (s *ContentService) GetHistory(ctx context.Context, contentID string, expan
 	return &history, nil
 }
 
-func (s *ContentService) GetChildren(ctx context.Context, contentID string, expand []string) (*ContentChildren, error) {
+func (s *ContentService) GetChildren(ctx context.Context, contentID string, expand []string) (*ContentResult, error) {
 	if err := s.client.CheckEndpoint("content"); err != nil {
 		return nil, err
 	}
-	path := fmt.Sprintf("/rest/api/content/%s/child", url.PathEscape(contentID))
+	path := fmt.Sprintf("/rest/api/content/%s/child/page", url.PathEscape(contentID))
 	if len(expand) > 0 {
 		path += "?expand=" + joinStrings(expand)
 	}
-	var children ContentChildren
+	var children ContentResult
 	if err := s.client.Get(ctx, path, &children); err != nil {
 		return nil, err
 	}
 	return &children, nil
 }
 
-func (s *ContentService) GetDescendants(ctx context.Context, contentID string, expand []string) (*ContentDescendants, error) {
+func (s *ContentService) GetDescendants(ctx context.Context, contentID string, expand []string) (*ContentResult, error) {
 	if err := s.client.CheckEndpoint("content"); err != nil {
 		return nil, err
 	}
@@ -178,7 +178,7 @@ func (s *ContentService) GetDescendants(ctx context.Context, contentID string, e
 	if len(expand) > 0 {
 		path += "?expand=" + joinStrings(expand)
 	}
-	var descendants ContentDescendants
+	var descendants ContentResult
 	if err := s.client.Get(ctx, path, &descendants); err != nil {
 		return nil, err
 	}

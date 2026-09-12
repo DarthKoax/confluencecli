@@ -5,7 +5,7 @@ import (
 	"fmt"
 	"net/url"
 
-	"github.com/darkkoax/confluencecli/internal/client"
+	"github.com/darthkoax/confluencecli/internal/client"
 )
 
 type SpaceService struct {

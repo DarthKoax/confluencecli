@@ -5,7 +5,7 @@ import (
 	"fmt"
 	"net/url"
 
-	"github.com/darkkoax/confluencecli/internal/client"
+	"github.com/darthkoax/confluencecli/internal/client"
 )
 
 type InlineTaskService struct {
@@ -17,15 +17,15 @@ func NewInlineTaskService(c *client.Client) *InlineTaskService {
 }
 
 type InlineTask struct {
-	ID            string `json:"id,omitempty"`
-	ContentID     string `json:"contentId,omitempty"`
-	Status        string `json:"status,omitempty"`
-	Creator       string `json:"creator,omitempty"`
-	Assignee      string `json:"assignee,omitempty"`
-	CompleteUser  string `json:"completeUser,omitempty"`
-	CompleteDate  string `json:"completeDate,omitempty"`
-	DueDate       string `json:"dueDate,omitempty"`
-	TaskDetailURL string `json:"taskDetailUrl,omitempty"`
+	ID            interface{} `json:"id,omitempty"`
+	ContentID     interface{} `json:"contentId,omitempty"`
+	Status        string      `json:"status,omitempty"`
+	Creator       string      `json:"creator,omitempty"`
+	Assignee      string      `json:"assignee,omitempty"`
+	CompleteUser  string      `json:"completeUser,omitempty"`
+	CompleteDate  int64       `json:"completeDate,omitempty"`
+	DueDate       int64       `json:"dueDate,omitempty"`
+	TaskDetailURL string      `json:"taskDetailUrl,omitempty"`
 }
 
 type InlineTaskResult struct {

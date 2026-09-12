@@ -13,7 +13,7 @@ import (
 	"strings"
 	"time"
 
-	"github.com/darkkoax/confluencecli/internal/config"
+	"github.com/darthkoax/confluencecli/internal/config"
 )
 
 var adminEndpoints = map[string]bool{

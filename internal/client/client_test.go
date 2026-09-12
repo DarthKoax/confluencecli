@@ -8,7 +8,7 @@ import (
 	"os"
 	"testing"
 
-	"github.com/darkkoax/confluencecli/internal/config"
+	"github.com/darthkoax/confluencecli/internal/config"
 )
 
 func testConfig(baseURL string) *config.Config {

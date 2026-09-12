@@ -4,7 +4,7 @@ import (
 	"fmt"
 	"os"
 
-	"github.com/darkkoax/confluencecli/internal/config"
+	"github.com/darthkoax/confluencecli/internal/config"
 )
 
 func handleInit(args []string) {
@@ -40,7 +40,7 @@ USAGE:
   confluencecli init [--dir <path>]
 
 DESCRIPTION:
-  Creates a default configuration file at ~/.config/darthkoax/confluencecli/config.toml
+  Creates a default configuration file at ~/.config/confluencecli/config.toml
   with all endpoints and methods enabled. The config file contains placeholders
   for your Confluence instance URL and API token.
 
@@ -49,7 +49,7 @@ DESCRIPTION:
 
 FLAGS:
   --dir <path>    Directory to create config in
-                  Default: ~/.config/darthkoax/confluencecli
+                  Default: ~/.config/confluencecli
                   Can also be set via CONFLUENCE_CONFIG_DIR environment variable
 
 EXAMPLES:

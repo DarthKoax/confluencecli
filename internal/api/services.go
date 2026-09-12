@@ -1,7 +1,7 @@
 package api
 
 import (
-	"github.com/darkkoax/confluencecli/internal/client"
+	"github.com/darthkoax/confluencecli/internal/client"
 )
 
 type Services struct {

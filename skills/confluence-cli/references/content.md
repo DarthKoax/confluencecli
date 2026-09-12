@@ -47,6 +47,53 @@ confluencecli content get 12345 --expand "body.storage,version,space"
 }
 ```
 
+## Finding Parent Pages
+
+```bash
+confluencecli content get <content-id> --expand ancestors
+```
+
+**Description:**
+Retrieves the parent/ancestor chain of a content item. The `ancestors` array is ordered from root to immediate parent.
+
+**Examples:**
+```bash
+# Get all ancestors of a page
+confluencecli content get 12345 --expand ancestors
+
+# Combine with other expand fields
+confluencecli content get 12345 --expand "ancestors,version,space"
+```
+
+**Output:**
+```json
+{
+  "id": "12345",
+  "type": "page",
+  "title": "Child Page",
+  "ancestors": [
+    {
+      "id": "12343",
+      "title": "Grandparent Page",
+      "type": "page",
+      "status": "current"
+    },
+    {
+      "id": "12344",
+      "title": "Parent Page",
+      "type": "page",
+      "status": "current"
+    }
+  ]
+}
+```
+
+**Key Details:**
+- The `ancestors` array is ordered from root (first element) to immediate parent (last element)
+- The immediate/direct parent is always the **last element** in the `ancestors` array
+- Without `--expand ancestors`, the ancestors field is omitted from the response
+- Pages at the root of a space have no ancestors (empty or missing field)
+
 ## List Content
 
 ```bash
@@ -320,7 +367,7 @@ confluencecli content children <content-id> [--expand <list>] [--config <path>]
 - `--config <path>`: Path to config file
 
 **Description:**
-Retrieves the child pages and comments of a content item. Maps to GET /rest/api/content/{id}/child.
+Retrieves the direct child pages of a content item. Maps to GET /rest/api/content/{id}/child/page.
 
 **Example:**
 ```bash
@@ -330,38 +377,59 @@ confluencecli content children 12345
 **Output:**
 ```json
 {
-  "page": {
-    "results": [
-      {"id": "12346", "title": "Child Page 1"},
-      {"id": "12347", "title": "Child Page 2"}
-    ]
-  },
-  "comment": {
-    "results": []
-  }
+  "results": [
+    {"id": "12346", "title": "Child Page 1", "type": "page", "status": "current"},
+    {"id": "12347", "title": "Child Page 2", "type": "page", "status": "current"}
+  ],
+  "start": 0,
+  "limit": 25,
+  "size": 2
 }
 ```
 
-## Content Descendants
+**Note:** This returns only direct children. For all descendants (recursive), use CQL search with the `ancestor` parameter (see below).
+
+## Finding All Descendants (Recursive)
+
+To find all descendant pages at all levels (children, grandchildren, etc.), use CQL search with the `ancestor` parameter:
 
 ```bash
-confluencecli content descendants <content-id> [--expand <list>] [--config <path>]
+confluencecli search cql --cql "ancestor=<content-id>" [--start <num>] [--limit <num>]
 ```
-
-**Arguments:**
-- `<content-id>`: Content ID (e.g., 12345)
-
-**Flags:**
-- `--expand <list>`: Comma-separated list of properties to expand
-- `--config <path>`: Path to config file
-
-**Description:**
-Retrieves all descendant pages of a content item (recursive children). Maps to GET /rest/api/content/{id}/descendant.
 
 **Example:**
 ```bash
-confluencecli content descendants 12345
+# Find all descendants of page 12345
+confluencecli search cql --cql "ancestor=12345"
+
+# With pagination
+confluencecli search cql --cql "ancestor=12345" --start 0 --limit 50
 ```
+
+**Output:**
+```json
+{
+  "results": [
+    {
+      "content": {"id": "12346", "title": "Child Page 1"},
+      "title": "Child Page 1",
+      "url": "/spaces/ds/pages/12346/Child+Page+1"
+    },
+    {
+      "content": {"id": "12348", "title": "Grandchild Page"},
+      "title": "Grandchild Page",
+      "url": "/spaces/ds/pages/12348/Grandchild+Page"
+    }
+  ],
+  "totalSize": 2,
+  "cqlQuery": "ancestor=12345"
+}
+```
+
+**Advantages of CQL search:**
+- Returns all descendants at all levels (recursive)
+- Supports pagination with `--start` and `--limit`
+- Can be combined with other CQL filters (e.g., `ancestor=12345 AND type=page`)
 
 ## Content Versions
 

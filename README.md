@@ -17,7 +17,7 @@ A Go wrapper library and CLI for the **Confluence Data Center / Server REST API*
 ### From Source
 
 ```bash
-git clone https://github.com/darkkoax/confluencecli.git
+git clone https://github.com/darthkoax/confluencecli.git
 cd confluencecli
 go build -o confluencecli ./cmd/confluencecli
 ```
@@ -25,7 +25,7 @@ go build -o confluencecli ./cmd/confluencecli
 ### Install to GOPATH
 
 ```bash
-go install github.com/darkkoax/confluencecli/cmd/confluencecli@latest
+go install github.com/darthkoax/confluencecli/cmd/confluencecli@latest
 ```
 
 ## Quick Start
@@ -36,7 +36,7 @@ go install github.com/darkkoax/confluencecli/cmd/confluencecli@latest
 confluencecli init
 ```
 
-This creates a default config file at `~/.config/darthkoax/confluencecli/config.toml`.
+This creates a default config file at `~/.config/confluencecli/config.toml`.
 
 ### 2. Edit Configuration
 
@@ -78,7 +78,7 @@ Connected to Confluence DC as: John Doe (john.doe)
 
 ### Config File Location
 
-Default: `~/.config/darthkoax/confluencecli/config.toml`
+Default: `~/.config/confluencecli/config.toml`
 
 Override with `CONFLUENCE_CONFIG_DIR` environment variable:
 ```bash
@@ -120,6 +120,29 @@ CONFLUENCE_ENDPOINT_SPACES="false"
 # ... etc
 ```
 
+## Agent Setup
+
+### Opencode
+
+#### Skill Config
+
+Copy the included skill to your harness skills directory:
+```bash
+cp -rp skills/confluence-cli ~/.config/opencode/skills
+```
+
+#### Agent Permission
+
+Apply the following to your opencode.json permissions block if you want to manually review write operations of your agent:
+```json
+"permission": {
+  "bash": {
+    "confluencecli *": "allow",
+    "CONFLUENCE_ALLOW_*=true confluencecli *": "ask"
+  }
+},
+```
+
 ## CLI Commands
 
 ### `confluencecli init`
@@ -132,7 +155,7 @@ confluencecli init [--dir <path>]
 
 | Flag | Description |
 |------|-------------|
-| `--dir <path>` | Directory to create config in (default: `~/.config/darthkoax/confluencecli`) |
+| `--dir <path>` | Directory to create config in (default: `~/.config/confluencecli`) |
 
 ### `confluencecli connect`
 
@@ -144,7 +167,7 @@ confluencecli connect [--config <path>]
 
 | Flag | Description |
 |------|-------------|
-| `--config <path>` | Path to config file (default: `~/.config/darthkoax/confluencecli/config.toml`) |
+| `--config <path>` | Path to config file (default: `~/.config/confluencecli/config.toml`) |
 
 ### `confluencecli version`
 
@@ -255,7 +278,7 @@ go vet ./...
 │   ├── api/              # API service wrappers (15 services)
 │   ├── client/           # HTTP client with TLS, auth, method gating
 │   └── config/           # TOML config loading
-├── agents/               # Agent skill documentation
+├── skills/               # Agent skill documentation (skills/confluence-cli/)
 ├── AGENTS.md             # Developer documentation
 └── README.md             # This file
 ```

@@ -67,7 +67,7 @@ func main() {
 
 func printVersion() {
 	fmt.Printf("confluencecli version %s\n", version)
-	fmt.Printf("GitHub: https://github.com/darkkoax/confluencecli\n")
+	fmt.Printf("GitHub: https://github.com/darthkoax/confluencecli\n")
 }
 
 func printRootHelp() {
@@ -115,7 +115,7 @@ EXAMPLES:
   confluencecli connect                                       # Test connection
   confluencecli content get 12345                             # Get page by ID
   confluencecli content create --json '{"type":"page",...}'   # Create page
-  confluencecli search --cql "type=page AND space=DEV"        # Search content
+  confluencecli search cql --cql "type=page AND space=DEV"    # Search content
   confluencecli help content                                  # Get help for content
 
 For more information about a command, run:

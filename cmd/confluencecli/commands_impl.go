@@ -7,14 +7,14 @@ import (
 	"os"
 	"strconv"
 
-	"github.com/darkkoax/confluencecli/internal/api"
-	"github.com/darkkoax/confluencecli/internal/client"
-	"github.com/darkkoax/confluencecli/internal/config"
+	"github.com/darthkoax/confluencecli/internal/api"
+	"github.com/darthkoax/confluencecli/internal/client"
+	"github.com/darthkoax/confluencecli/internal/config"
 )
 
 func getServices(configPath string) *api.Services {
 	if configPath == "" {
-		configPath = getDefaultConfigPath()
+		configPath = config.DefaultConfigPath()
 	}
 	cfg, err := loadConfig(configPath)
 	if err != nil {
@@ -35,14 +35,6 @@ func loadConfig(configPath string) (*config.Config, error) {
 
 func createClient(cfg *config.Config) (*client.Client, error) {
 	return client.New(cfg)
-}
-
-func getDefaultConfigPath() string {
-	if configDir := os.Getenv("CONFLUENCE_CONFIG_DIR"); configDir != "" {
-		return configDir + "/config.toml"
-	}
-	home, _ := os.UserHomeDir()
-	return home + "/.config/darthkoax/confluencecli/config.toml"
 }
 
 func outputJSON(v interface{}) {

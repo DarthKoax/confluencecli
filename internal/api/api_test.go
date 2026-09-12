@@ -7,8 +7,8 @@ import (
 	"net/http/httptest"
 	"testing"
 
-	"github.com/darkkoax/confluencecli/internal/client"
-	"github.com/darkkoax/confluencecli/internal/config"
+	"github.com/darthkoax/confluencecli/internal/client"
+	"github.com/darthkoax/confluencecli/internal/config"
 )
 
 func testClient(t *testing.T, handler http.Handler) (*client.Client, *httptest.Server) {
@@ -515,7 +515,7 @@ func TestContentService_GetHistory(t *testing.T) {
 
 func TestContentService_GetChildren(t *testing.T) {
 	c, server := testClient(t, http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
-		json.NewEncoder(w).Encode(ContentChildren{})
+		json.NewEncoder(w).Encode(ContentResult{Size: 0})
 	}))
 	defer server.Close()
 
@@ -531,7 +531,7 @@ func TestContentService_GetChildren(t *testing.T) {
 
 func TestContentService_GetDescendants(t *testing.T) {
 	c, server := testClient(t, http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
-		json.NewEncoder(w).Encode(ContentDescendants{})
+		json.NewEncoder(w).Encode(ContentResult{Size: 0})
 	}))
 	defer server.Close()
 

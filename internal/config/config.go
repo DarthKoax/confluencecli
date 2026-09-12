@@ -240,9 +240,9 @@ func DefaultConfigDir() string {
 	}
 	home, err := os.UserHomeDir()
 	if err != nil {
-		return ".config/darthkoax/confluencecli"
+		return ".config/confluencecli"
 	}
-	return filepath.Join(home, ".config", "darthkoax", "confluencecli")
+	return filepath.Join(home, ".config", "confluencecli")
 }
 
 func DefaultConfigPath() string {
@@ -250,13 +250,13 @@ func DefaultConfigPath() string {
 }
 
 func DefaultConfigContent() string {
-	return `[confluence]
+	return `admin_mode = false
+
+[confluence]
 base_url = "https://confluence.example.com"
 api_token = "YOUR_API_TOKEN_HERE"
 custom_ca_cert = ""
 timeout = 30
-
-admin_mode = false
 
 [methods]
 allow_get = true

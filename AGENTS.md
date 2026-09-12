@@ -111,21 +111,21 @@ internal/
   client/   — HTTP client (TLS, auth, method gating, endpoint gating, admin checks)
   api/      — Typed service wrappers per Confluence resource (15 services)
 cmd/confluencecli/ — CLI entry point (init, connect, version, help subcommands)
-agents/     — Agent skill documentation (confluence-cli-skill.md)
+skills/     — Agent skill documentation (skills/confluence-cli/SKILL.md)
 ```
 
 ### CLI Subcommands
 
 | Command | Description |
 |---------|-------------|
-| `init` | Create default config at `~/.config/darthkoax/confluencecli/config.toml` |
+| `init` | Create default config at `~/.config/confluencecli/config.toml` |
 | `connect` | Connect to Confluence and verify authentication |
 | `version` | Print version information |
 | `help` | Show usage information |
 
 ### Default Config Path
 
-- Default: `~/.config/darthkoax/confluencecli/config.toml`
+- Default: `~/.config/confluencecli/config.toml`
 - Override directory: `CONFLUENCE_CONFIG_DIR` environment variable
 - Override file: `--config <path>` flag on `connect` command
 

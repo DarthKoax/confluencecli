@@ -8,6 +8,8 @@ import (
 	"path/filepath"
 	"strings"
 	"testing"
+
+	"github.com/darthkoax/confluencecli/internal/config"
 )
 
 func TestMain_Help(t *testing.T) {
@@ -204,12 +206,12 @@ func TestIndexOf(t *testing.T) {
 }
 
 func TestGetDefaultConfigPath(t *testing.T) {
-	path := getDefaultConfigPath()
+	path := config.DefaultConfigPath()
 	if path == "" {
-		t.Error("getDefaultConfigPath() returned empty string")
+		t.Error("config.DefaultConfigPath() returned empty string")
 	}
 	if !strings.Contains(path, "config.toml") {
-		t.Errorf("getDefaultConfigPath() = %v, should contain config.toml", path)
+		t.Errorf("config.DefaultConfigPath() = %v, should contain config.toml", path)
 	}
 }
 
@@ -218,9 +220,9 @@ func TestGetDefaultConfigPath_WithEnv(t *testing.T) {
 	defer os.Setenv("CONFLUENCE_CONFIG_DIR", original)
 
 	os.Setenv("CONFLUENCE_CONFIG_DIR", "/custom/path")
-	path := getDefaultConfigPath()
+	path := config.DefaultConfigPath()
 	if path != "/custom/path/config.toml" {
-		t.Errorf("getDefaultConfigPath() with env = %v, want /custom/path/config.toml", path)
+		t.Errorf("config.DefaultConfigPath() with env = %v, want /custom/path/config.toml", path)
 	}
 }
 

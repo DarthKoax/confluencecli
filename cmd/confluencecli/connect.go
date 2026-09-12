@@ -5,9 +5,9 @@ import (
 	"fmt"
 	"os"
 
-	"github.com/darkkoax/confluencecli/internal/api"
-	"github.com/darkkoax/confluencecli/internal/client"
-	"github.com/darkkoax/confluencecli/internal/config"
+	"github.com/darthkoax/confluencecli/internal/api"
+	"github.com/darthkoax/confluencecli/internal/client"
+	"github.com/darthkoax/confluencecli/internal/config"
 )
 
 func handleConnect(args []string) {
@@ -75,7 +75,7 @@ DESCRIPTION:
 
 FLAGS:
   --config <path>    Path to config file
-                     Default: ~/.config/darthkoax/confluencecli/config.toml
+                     Default: ~/.config/confluencecli/config.toml
 
 EXAMPLES:
   confluencecli connect                              # Use default config location
