@@ -36,6 +36,13 @@ func testClient(t *testing.T, handler http.Handler) (*client.Client, *httptest.S
 	return c, server
 }
 
+func skipIfReadOnly(t *testing.T) {
+	t.Helper()
+	if client.ReadOnlyMode {
+		t.Skip("skipping write-method test in readonly mode")
+	}
+}
+
 func TestContentService_Get(t *testing.T) {
 	c, server := testClient(t, http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 		if r.URL.Path != "/rest/api/content/12345" {
@@ -56,6 +63,7 @@ func TestContentService_Get(t *testing.T) {
 }
 
 func TestContentService_Create(t *testing.T) {
+	skipIfReadOnly(t)
 	c, server := testClient(t, http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 		if r.Method != http.MethodPost {
 			t.Errorf("Method = %v, want POST", r.Method)
@@ -145,6 +153,7 @@ func TestSpaceService_Get(t *testing.T) {
 }
 
 func TestSpaceService_Create_NoAdminRequired(t *testing.T) {
+	skipIfReadOnly(t)
 	_, server := testClient(t, http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 		if r.Method != http.MethodPost {
 			t.Errorf("Method = %v, want POST", r.Method)
@@ -232,6 +241,7 @@ func TestGroupService_Get(t *testing.T) {
 }
 
 func TestGroupService_AddMember_NoAdminRequired(t *testing.T) {
+	skipIfReadOnly(t)
 	_, server := testClient(t, http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 		if r.Method != http.MethodPost {
 			t.Errorf("Method = %v, want POST", r.Method)
@@ -463,6 +473,7 @@ func TestContentService_GetAll(t *testing.T) {
 }
 
 func TestContentService_Update(t *testing.T) {
+	skipIfReadOnly(t)
 	c, server := testClient(t, http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 		if r.Method != http.MethodPut {
 			t.Errorf("Method = %v, want PUT", r.Method)
@@ -482,6 +493,7 @@ func TestContentService_Update(t *testing.T) {
 }
 
 func TestContentService_Delete(t *testing.T) {
+	skipIfReadOnly(t)
 	c, server := testClient(t, http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 		if r.Method != http.MethodDelete {
 			t.Errorf("Method = %v, want DELETE", r.Method)
@@ -594,6 +606,7 @@ func TestContentService_GetAttachments(t *testing.T) {
 }
 
 func TestSpaceService_Create(t *testing.T) {
+	skipIfReadOnly(t)
 	c, server := testClient(t, http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 		if r.Method != http.MethodPost {
 			t.Errorf("Method = %v, want POST", r.Method)
@@ -613,6 +626,7 @@ func TestSpaceService_Create(t *testing.T) {
 }
 
 func TestSpaceService_Delete(t *testing.T) {
+	skipIfReadOnly(t)
 	c, server := testClient(t, http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 		if r.Method != http.MethodDelete {
 			t.Errorf("Method = %v, want DELETE", r.Method)
@@ -749,6 +763,7 @@ func TestGroupService_GetMembers(t *testing.T) {
 }
 
 func TestGroupService_AddMember(t *testing.T) {
+	skipIfReadOnly(t)
 	c, server := testClient(t, http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 		if r.Method != http.MethodPost {
 			t.Errorf("Method = %v, want POST", r.Method)
@@ -765,6 +780,7 @@ func TestGroupService_AddMember(t *testing.T) {
 }
 
 func TestGroupService_RemoveMember(t *testing.T) {
+	skipIfReadOnly(t)
 	c, server := testClient(t, http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 		if r.Method != http.MethodDelete {
 			t.Errorf("Method = %v, want DELETE", r.Method)
@@ -813,6 +829,7 @@ func TestSettingsService_GetTheme(t *testing.T) {
 }
 
 func TestSettingsService_SetTheme(t *testing.T) {
+	skipIfReadOnly(t)
 	c, server := testClient(t, http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 		if r.Method != http.MethodPut {
 			t.Errorf("Method = %v, want PUT", r.Method)
@@ -845,6 +862,7 @@ func TestSettingsService_GetLookAndFeel(t *testing.T) {
 }
 
 func TestSettingsService_SetLookAndFeel(t *testing.T) {
+	skipIfReadOnly(t)
 	c, server := testClient(t, http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 		if r.Method != http.MethodPut {
 			t.Errorf("Method = %v, want PUT", r.Method)
@@ -861,6 +879,7 @@ func TestSettingsService_SetLookAndFeel(t *testing.T) {
 }
 
 func TestSettingsService_ResetLookAndFeel(t *testing.T) {
+	skipIfReadOnly(t)
 	c, server := testClient(t, http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 		if r.Method != http.MethodDelete {
 			t.Errorf("Method = %v, want DELETE", r.Method)
@@ -925,6 +944,7 @@ func TestAuditService_GetRetentionPeriod(t *testing.T) {
 }
 
 func TestAuditService_SetRetentionPeriod(t *testing.T) {
+	skipIfReadOnly(t)
 	c, server := testClient(t, http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 		if r.Method != http.MethodPut {
 			t.Errorf("Method = %v, want PUT", r.Method)
@@ -973,6 +993,7 @@ func TestTemplateService_GetContentTemplates(t *testing.T) {
 }
 
 func TestTemplateService_CreateContentTemplate(t *testing.T) {
+	skipIfReadOnly(t)
 	c, server := testClient(t, http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 		if r.Method != http.MethodPost {
 			t.Errorf("Method = %v, want POST", r.Method)
@@ -992,6 +1013,7 @@ func TestTemplateService_CreateContentTemplate(t *testing.T) {
 }
 
 func TestTemplateService_UpdateContentTemplate(t *testing.T) {
+	skipIfReadOnly(t)
 	c, server := testClient(t, http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 		if r.Method != http.MethodPut {
 			t.Errorf("Method = %v, want PUT", r.Method)
@@ -1011,6 +1033,7 @@ func TestTemplateService_UpdateContentTemplate(t *testing.T) {
 }
 
 func TestTemplateService_RemoveContentTemplate(t *testing.T) {
+	skipIfReadOnly(t)
 	c, server := testClient(t, http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 		if r.Method != http.MethodDelete {
 			t.Errorf("Method = %v, want DELETE", r.Method)
@@ -1075,6 +1098,7 @@ func TestContentStateService_Get(t *testing.T) {
 }
 
 func TestContentStateService_Create(t *testing.T) {
+	skipIfReadOnly(t)
 	c, server := testClient(t, http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 		if r.Method != http.MethodPost {
 			t.Errorf("Method = %v, want POST", r.Method)
@@ -1094,6 +1118,7 @@ func TestContentStateService_Create(t *testing.T) {
 }
 
 func TestContentStateService_Update(t *testing.T) {
+	skipIfReadOnly(t)
 	c, server := testClient(t, http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 		if r.Method != http.MethodPut {
 			t.Errorf("Method = %v, want PUT", r.Method)
@@ -1113,6 +1138,7 @@ func TestContentStateService_Update(t *testing.T) {
 }
 
 func TestContentStateService_Delete(t *testing.T) {
+	skipIfReadOnly(t)
 	c, server := testClient(t, http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 		if r.Method != http.MethodDelete {
 			t.Errorf("Method = %v, want DELETE", r.Method)
@@ -1177,6 +1203,7 @@ func TestInlineTaskService_GetByContent(t *testing.T) {
 }
 
 func TestInlineTaskService_Update(t *testing.T) {
+	skipIfReadOnly(t)
 	c, server := testClient(t, http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 		if r.Method != http.MethodPut {
 			t.Errorf("Method = %v, want PUT", r.Method)
@@ -1212,6 +1239,7 @@ func TestRelationService_Get(t *testing.T) {
 }
 
 func TestRelationService_Create(t *testing.T) {
+	skipIfReadOnly(t)
 	c, server := testClient(t, http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 		if r.Method != http.MethodPost {
 			t.Errorf("Method = %v, want POST", r.Method)
@@ -1231,6 +1259,7 @@ func TestRelationService_Create(t *testing.T) {
 }
 
 func TestRelationService_Delete(t *testing.T) {
+	skipIfReadOnly(t)
 	c, server := testClient(t, http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 		if r.Method != http.MethodDelete {
 			t.Errorf("Method = %v, want DELETE", r.Method)

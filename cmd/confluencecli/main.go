@@ -5,7 +5,7 @@ import (
 	"os"
 )
 
-const version = "0.1.0"
+const version = "0.2.0"
 
 func main() {
 	if len(os.Args) < 2 {
@@ -66,12 +66,12 @@ func main() {
 }
 
 func printVersion() {
-	fmt.Printf("confluencecli version %s\n", version)
+	fmt.Printf("confluencecli version %s%s\n", version, buildMode)
 	fmt.Printf("GitHub: https://github.com/darthkoax/confluencecli\n")
 }
 
 func printRootHelp() {
-	fmt.Printf(`confluencecli %s - Confluence Data Center / Server CLI
+	fmt.Printf(`confluencecli %s%s - Confluence Data Center / Server CLI
 
 USAGE:
   confluencecli <command> [flags]
@@ -120,7 +120,7 @@ EXAMPLES:
 
 For more information about a command, run:
   confluencecli help <command>
-`, version)
+`, version, buildMode)
 }
 
 

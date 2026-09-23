@@ -97,6 +97,9 @@ func TestClient_Do_MethodGating(t *testing.T) {
 
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
+			if ReadOnlyMode && tt.method != http.MethodGet {
+				t.Skip("skipping write method test in readonly mode")
+			}
 			cfg := testConfig(server.URL)
 			switch tt.method {
 			case http.MethodGet:
@@ -348,6 +351,9 @@ func TestClient_Get(t *testing.T) {
 }
 
 func TestClient_Post(t *testing.T) {
+	if ReadOnlyMode {
+		t.Skip("skipping POST test in readonly mode")
+	}
 	server := httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 		if r.Method != http.MethodPost {
 			t.Errorf("Method = %v, want POST", r.Method)
@@ -374,6 +380,9 @@ func TestClient_Post(t *testing.T) {
 }
 
 func TestClient_Put(t *testing.T) {
+	if ReadOnlyMode {
+		t.Skip("skipping PUT test in readonly mode")
+	}
 	server := httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 		if r.Method != http.MethodPut {
 			t.Errorf("Method = %v, want PUT", r.Method)
@@ -395,6 +404,9 @@ func TestClient_Put(t *testing.T) {
 }
 
 func TestClient_Delete(t *testing.T) {
+	if ReadOnlyMode {
+		t.Skip("skipping DELETE test in readonly mode")
+	}
 	server := httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 		if r.Method != http.MethodDelete {
 			t.Errorf("Method = %v, want DELETE", r.Method)
@@ -424,6 +436,33 @@ func TestNew_NoCustomCA(t *testing.T) {
 	}
 	if c == nil {
 		t.Fatal("New() returned nil")
+	}
+}
+
+func TestReadOnlyMode_Default(t *testing.T) {
+	if ReadOnlyMode {
+		t.Skip("skipping default-build test: binary compiled with -tags readonly")
+	}
+
+	server := httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+		w.WriteHeader(http.StatusOK)
+	}))
+	defer server.Close()
+
+	cfg := testConfig(server.URL)
+	c, err := New(cfg)
+	if err != nil {
+		t.Fatal(err)
+	}
+
+	if err := c.Post(context.Background(), "/test", nil, nil); err != nil {
+		t.Errorf("Post() should succeed in default build, got: %v", err)
+	}
+	if err := c.Put(context.Background(), "/test", nil, nil); err != nil {
+		t.Errorf("Put() should succeed in default build, got: %v", err)
+	}
+	if err := c.Delete(context.Background(), "/test"); err != nil {
+		t.Errorf("Delete() should succeed in default build, got: %v", err)
 	}
 }
 
@@ -544,6 +583,9 @@ func TestClient_Do_InvalidJSON(t *testing.T) {
 }
 
 func TestClient_Post_WithBody(t *testing.T) {
+	if ReadOnlyMode {
+		t.Skip("skipping POST test in readonly mode")
+	}
 	server := httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 		if r.Header.Get("Content-Type") != "application/json" {
 			t.Errorf("Content-Type = %v, want application/json", r.Header.Get("Content-Type"))
@@ -575,6 +617,9 @@ func TestClient_Post_WithBody(t *testing.T) {
 }
 
 func TestClient_Put_WithBody(t *testing.T) {
+	if ReadOnlyMode {
+		t.Skip("skipping PUT test in readonly mode")
+	}
 	server := httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 		var body map[string]interface{}
 		json.NewDecoder(r.Body).Decode(&body)

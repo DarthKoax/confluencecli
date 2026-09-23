@@ -155,14 +155,23 @@ func (c *Client) Do(ctx context.Context, method, path string, body interface{}, 
 			return fmt.Errorf("GET method is disabled in configuration. This operation cannot be performed. You should not attempt to bypass this restriction. Please ask the user to enable GET requests in config.toml or contact an administrator")
 		}
 	case http.MethodPost:
+		if ReadOnlyMode {
+			return fmt.Errorf("POST method is disabled: this binary was compiled in read-only mode (-tags readonly)")
+		}
 		if !c.methods.AllowPost {
 			return fmt.Errorf("POST method is disabled in configuration. This operation cannot be performed. You should not attempt to bypass this restriction. Please ask the user to enable POST requests in config.toml or contact an administrator")
 		}
 	case http.MethodPut:
+		if ReadOnlyMode {
+			return fmt.Errorf("PUT method is disabled: this binary was compiled in read-only mode (-tags readonly)")
+		}
 		if !c.methods.AllowPut {
 			return fmt.Errorf("PUT method is disabled in configuration. This operation cannot be performed. You should not attempt to bypass this restriction. Please ask the user to enable PUT requests in config.toml or contact an administrator")
 		}
 	case http.MethodDelete:
+		if ReadOnlyMode {
+			return fmt.Errorf("DELETE method is disabled: this binary was compiled in read-only mode (-tags readonly)")
+		}
 		if !c.methods.AllowDelete {
 			return fmt.Errorf("DELETE method is disabled in configuration. This operation cannot be performed. You should not attempt to bypass this restriction. Please ask the user to enable DELETE requests in config.toml or contact an administrator")
 		}

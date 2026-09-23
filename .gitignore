@@ -1,2 +1,2 @@
-confluencecli
-!cmd/confluencecli
+/confluencecli
+/confluencecli-*
