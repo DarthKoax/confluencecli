@@ -50,6 +50,9 @@ func handleContent(args []string) {
 		"versions":     handleContentVersions,
 		"comments":     handleContentComments,
 		"attachments":  handleContentAttachments,
+		"labels":       handleContentLabels,
+		"add-label":    handleContentAddLabel,
+		"remove-label": handleContentRemoveLabel,
 	}
 	handleCommandWithHelp("content", args, printContentHelp, actionHandlers, printContentActionHelp)
 }

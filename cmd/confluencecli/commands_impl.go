@@ -299,6 +299,68 @@ func handleContentAttachments(args []string) {
 	outputJSON(result)
 }
 
+func handleContentLabels(args []string) {
+	if len(args) == 0 {
+		fmt.Fprintf(os.Stderr, "Error: content ID required\n")
+		os.Exit(1)
+	}
+	configPath := parseFlag(args, "--config")
+	services := getServices(configPath)
+	start := parseFlagInt(args, "--start", 0)
+	limit := parseFlagInt(args, "--limit", 25)
+	result, err := services.Content.GetLabels(context.Background(), args[0], start, limit)
+	if err != nil {
+		fmt.Fprintf(os.Stderr, "Error: %v\n", err)
+		os.Exit(1)
+	}
+	outputJSON(result)
+}
+
+func handleContentAddLabel(args []string) {
+	if len(args) == 0 {
+		fmt.Fprintf(os.Stderr, "Error: content ID required\n")
+		os.Exit(1)
+	}
+	name := parseFlag(args, "--name")
+	if name == "" {
+		fmt.Fprintf(os.Stderr, "Error: --name required\n")
+		os.Exit(1)
+	}
+	prefix := parseFlag(args, "--prefix")
+	if prefix == "" {
+		prefix = "global"
+	}
+	configPath := parseFlag(args, "--config")
+	services := getServices(configPath)
+	labels := []api.Label{{Prefix: prefix, Name: name}}
+	result, err := services.Content.AddLabels(context.Background(), args[0], labels)
+	if err != nil {
+		fmt.Fprintf(os.Stderr, "Error: %v\n", err)
+		os.Exit(1)
+	}
+	outputJSON(result)
+}
+
+func handleContentRemoveLabel(args []string) {
+	if len(args) == 0 {
+		fmt.Fprintf(os.Stderr, "Error: content ID required\n")
+		os.Exit(1)
+	}
+	name := parseFlag(args, "--name")
+	if name == "" {
+		fmt.Fprintf(os.Stderr, "Error: --name required\n")
+		os.Exit(1)
+	}
+	configPath := parseFlag(args, "--config")
+	services := getServices(configPath)
+	err := services.Content.RemoveLabel(context.Background(), args[0], name)
+	if err != nil {
+		fmt.Fprintf(os.Stderr, "Error: %v\n", err)
+		os.Exit(1)
+	}
+	fmt.Printf("Label %q removed from content %s successfully\n", name, args[0])
+}
+
 func handleSpaceList(args []string) {
 	configPath := parseFlag(args, "--config")
 	services := getServices(configPath)

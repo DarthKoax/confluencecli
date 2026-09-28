@@ -60,6 +60,19 @@ type ContentDescendants struct {
 	Descendant *ContentResult `json:"descendant,omitempty"`
 }
 
+type Label struct {
+	Prefix string `json:"prefix,omitempty"`
+	Name   string `json:"name,omitempty"`
+	ID     string `json:"id,omitempty"`
+}
+
+type LabelResult struct {
+	Results []Label `json:"results"`
+	Start   int     `json:"start"`
+	Limit   int     `json:"limit"`
+	Size    int     `json:"size"`
+}
+
 func (s *ContentService) Get(ctx context.Context, contentID string, expand []string) (*Content, error) {
 	if err := s.client.CheckEndpoint("content"); err != nil {
 		return nil, err
@@ -229,6 +242,48 @@ func (s *ContentService) GetAttachments(ctx context.Context, contentID string) (
 		return nil, err
 	}
 	return &result, nil
+}
+
+func (s *ContentService) GetLabels(ctx context.Context, contentID string, start, limit int) (*LabelResult, error) {
+	if err := s.client.CheckEndpoint("content"); err != nil {
+		return nil, err
+	}
+	path := fmt.Sprintf("/rest/api/content/%s/label", url.PathEscape(contentID))
+	params := url.Values{}
+	if start > 0 {
+		params.Set("start", itoa(start))
+	}
+	if limit > 0 {
+		params.Set("limit", itoa(limit))
+	}
+	if len(params) > 0 {
+		path += "?" + params.Encode()
+	}
+	var result LabelResult
+	if err := s.client.Get(ctx, path, &result); err != nil {
+		return nil, err
+	}
+	return &result, nil
+}
+
+func (s *ContentService) AddLabels(ctx context.Context, contentID string, labels []Label) (*LabelResult, error) {
+	if err := s.client.CheckEndpoint("content"); err != nil {
+		return nil, err
+	}
+	path := fmt.Sprintf("/rest/api/content/%s/label", url.PathEscape(contentID))
+	var result LabelResult
+	if err := s.client.Post(ctx, path, labels, &result); err != nil {
+		return nil, err
+	}
+	return &result, nil
+}
+
+func (s *ContentService) RemoveLabel(ctx context.Context, contentID string, labelName string) error {
+	if err := s.client.CheckEndpoint("content"); err != nil {
+		return err
+	}
+	path := fmt.Sprintf("/rest/api/content/%s/label/%s", url.PathEscape(contentID), url.PathEscape(labelName))
+	return s.client.Delete(ctx, path)
 }
 
 func joinStrings(strs []string) string {

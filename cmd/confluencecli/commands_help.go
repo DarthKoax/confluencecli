@@ -23,6 +23,9 @@ ACTIONS:
   versions <id>         Get content versions
   comments <id>         Get content comments
   attachments <id>      Get content attachments
+  labels <id>           Get content labels
+  add-label <id>        Add a label to content
+  remove-label <id>     Remove a label from content
 
 FLAGS:
   --config <path>       Path to config file
@@ -33,6 +36,8 @@ FLAGS:
   --start <n>           Start index for pagination
   --limit <n>           Maximum results to return
   --json <payload>      JSON payload for create/update
+  --name <name>         Label name (for add-label, remove-label)
+  --prefix <prefix>     Label prefix: global or my (default: global)
 
 EXAMPLES:
   confluencecli content get 12345
@@ -42,6 +47,9 @@ EXAMPLES:
   confluencecli content delete 12345
   confluencecli content history 12345
   confluencecli content children 12345 --expand page.body.view
+  confluencecli content labels 12345
+  confluencecli content add-label 12345 --name my-label
+  confluencecli content remove-label 12345 --name my-label
 `)
 }
 

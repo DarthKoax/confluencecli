@@ -115,6 +115,112 @@ func TestContentService_EndpointDisabled(t *testing.T) {
 	}
 }
 
+func TestContentService_GetLabels(t *testing.T) {
+	c, server := testClient(t, http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+		if r.URL.Path != "/rest/api/content/12345/label" {
+			t.Errorf("Path = %v, want /rest/api/content/12345/label", r.URL.Path)
+		}
+		if r.Method != http.MethodGet {
+			t.Errorf("Method = %v, want GET", r.Method)
+		}
+		json.NewEncoder(w).Encode(LabelResult{
+			Results: []Label{
+				{Prefix: "global", Name: "dev", ID: "1"},
+				{Prefix: "global", Name: "reviewed", ID: "2"},
+			},
+			Size: 2,
+		})
+	}))
+	defer server.Close()
+
+	svc := NewContentService(c)
+	result, err := svc.GetLabels(context.Background(), "12345", 0, 25)
+	if err != nil {
+		t.Fatal(err)
+	}
+	if len(result.Results) != 2 {
+		t.Errorf("len(Results) = %v, want 2", len(result.Results))
+	}
+	if result.Results[0].Name != "dev" {
+		t.Errorf("Results[0].Name = %v, want dev", result.Results[0].Name)
+	}
+}
+
+func TestContentService_GetLabels_Pagination(t *testing.T) {
+	c, server := testClient(t, http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+		start := r.URL.Query().Get("start")
+		limit := r.URL.Query().Get("limit")
+		if start != "10" {
+			t.Errorf("start = %v, want 10", start)
+		}
+		if limit != "5" {
+			t.Errorf("limit = %v, want 5", limit)
+		}
+		json.NewEncoder(w).Encode(LabelResult{Results: []Label{}, Size: 0})
+	}))
+	defer server.Close()
+
+	svc := NewContentService(c)
+	_, err := svc.GetLabels(context.Background(), "12345", 10, 5)
+	if err != nil {
+		t.Fatal(err)
+	}
+}
+
+func TestContentService_AddLabels(t *testing.T) {
+	skipIfReadOnly(t)
+	c, server := testClient(t, http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+		if r.URL.Path != "/rest/api/content/12345/label" {
+			t.Errorf("Path = %v, want /rest/api/content/12345/label", r.URL.Path)
+		}
+		if r.Method != http.MethodPost {
+			t.Errorf("Method = %v, want POST", r.Method)
+		}
+		var labels []Label
+		json.NewDecoder(r.Body).Decode(&labels)
+		if len(labels) != 1 || labels[0].Name != "new-label" {
+			t.Errorf("unexpected labels payload: %v", labels)
+		}
+		json.NewEncoder(w).Encode(LabelResult{
+			Results: []Label{{Prefix: "global", Name: "new-label", ID: "3"}},
+			Size:    1,
+		})
+	}))
+	defer server.Close()
+
+	svc := NewContentService(c)
+	result, err := svc.AddLabels(context.Background(), "12345", []Label{{Prefix: "global", Name: "new-label"}})
+	if err != nil {
+		t.Fatal(err)
+	}
+	if len(result.Results) != 1 {
+		t.Errorf("len(Results) = %v, want 1", len(result.Results))
+	}
+	if result.Results[0].Name != "new-label" {
+		t.Errorf("Results[0].Name = %v, want new-label", result.Results[0].Name)
+	}
+}
+
+func TestContentService_RemoveLabel(t *testing.T) {
+	skipIfReadOnly(t)
+	c, server := testClient(t, http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+		if r.URL.Path != "/rest/api/content/12345/label/my-label" {
+			t.Errorf("Path = %v, want /rest/api/content/12345/label/my-label", r.URL.Path)
+		}
+		if r.Method != http.MethodDelete {
+			t.Errorf("Method = %v, want DELETE", r.Method)
+		}
+		w.WriteHeader(http.StatusNoContent)
+	}))
+	defer server.Close()
+
+	svc := NewContentService(c)
+	err := svc.RemoveLabel(context.Background(), "12345", "my-label")
+	if err != nil {
+		t.Fatal(err)
+	}
+}
+
 func TestSpaceService_GetAll(t *testing.T) {
 	c, server := testClient(t, http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 		json.NewEncoder(w).Encode(SpaceResult{
